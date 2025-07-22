@@ -1,0 +1,15 @@
+.navbar-logo {
+  height: 2.2rem;
+  width: auto;
+  max-height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: contain;
+}
+
+@media (max-width: 576px) {
+  .navbar-logo {
+    height: 1.6rem;
+  }
+}
+
