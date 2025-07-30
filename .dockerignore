@@ -1,5 +1,4 @@
 node_modules
-npm-debug.log
 .git
 .gitignore
 README.md
@@ -10,7 +9,6 @@ README.md
 .env.test
 .nyc_output
 coverage
-.nyc_output
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -26,7 +24,5 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 bootstrap/cache/*
-vendor
-composer.lock
 package-lock.json
 yarn.lock 
