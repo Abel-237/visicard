@@ -25,4 +25,10 @@ storage/framework/sessions/*
 storage/framework/views/*
 bootstrap/cache/*
 package-lock.json
-yarn.lock 
+yarn.lock
+docker/
+railway*.md
+docker-build-troubleshooting.md
+railway-nixpacks-fix.md
+railway-setup.md
+deploy-railway.sh 

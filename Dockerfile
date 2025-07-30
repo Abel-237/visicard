@@ -19,14 +19,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers de dépendances
-COPY composer.json composer.lock ./
-
-# Installer les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Copier le reste des fichiers de l'application
+# Copier tous les fichiers de l'application d'abord
 COPY . .
+
+# Installer les dépendances PHP (après avoir copié artisan)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Créer le répertoire storage et définir les permissions
 RUN mkdir -p storage/framework/{sessions,views,cache} \
