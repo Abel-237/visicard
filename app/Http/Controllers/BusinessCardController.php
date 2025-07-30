@@ -58,7 +58,8 @@ class BusinessCardController extends Controller
             'bio' => 'nullable|string',
             'social_media' => 'nullable|array',
             'social_media.*' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'visibility' => 'required|in:public,private',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -70,6 +71,7 @@ class BusinessCardController extends Controller
             $validated['social_media'] = json_encode($validated['social_media']);
         }
 
+        $validated['visibility'] = $request->input('visibility', 'private');
         $validated['user_id'] = $user->id;
 
         $businessCard = BusinessCard::create($validated);
@@ -80,6 +82,7 @@ class BusinessCardController extends Controller
 
     public function show(BusinessCard $businessCard)
     {
+        $businessCard->increment('views');
         $businessCard->load('user');
 
         // Générer l'URL publique de la carte
@@ -94,7 +97,9 @@ class BusinessCardController extends Controller
     public function edit(BusinessCard $businessCard)
     {
         $this->authorize('update', $businessCard);
-        return view('business-cards.edit', compact('businessCard'));
+        $publicUrl = route('shared.card', ['token' => $businessCard->user->username ?? $businessCard->id]);
+        $qrCode = QrCode::size(200)->generate($publicUrl);
+        return view('business-cards.edit', compact('businessCard', 'qrCode'));
     }
 
     public function update(Request $request, BusinessCard $businessCard)
@@ -114,6 +119,7 @@ class BusinessCardController extends Controller
             'logo' => 'nullable|image|max:2048',
             'social_media' => 'nullable|array',
             'social_media.*' => 'nullable|url|max:255',
+            'visibility' => 'required|in:public,private',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -124,11 +130,12 @@ class BusinessCardController extends Controller
         }
 
         $validated['social_media'] = json_encode($validated['social_media'] ?? []);
+        $validated['visibility'] = $request->input('visibility', 'private');
 
         $businessCard->update($validated);
 
-        return redirect()->route('business-cards.index')
-            ->with('success', 'Votre carte de visite a été mise à jour avec succès !');
+        return redirect()->route('business-cards.show', $businessCard)
+            ->with('success', 'Carte de visite mise à jour avec succès.');
     }
 
     public function destroy(BusinessCard $businessCard)
@@ -145,5 +152,20 @@ class BusinessCardController extends Controller
             ->with('success', 'Votre carte de visite a été supprimée avec succès !');
     }
 
-
+    // Génération vCard
+    public function vcard(BusinessCard $businessCard)
+    {
+        $vcard = "BEGIN:VCARD\nVERSION:3.0\n";
+        $vcard .= "FN:" . $businessCard->name . "\n";
+        $vcard .= "ORG:" . $businessCard->company . "\n";
+        $vcard .= "TITLE:" . ($businessCard->title ?? $businessCard->position) . "\n";
+        $vcard .= "TEL;TYPE=WORK,VOICE:" . $businessCard->phone . "\n";
+        $vcard .= "EMAIL;TYPE=PREF,INTERNET:" . $businessCard->email . "\n";
+        if ($businessCard->website) $vcard .= "URL:" . $businessCard->website . "\n";
+        if ($businessCard->address) $vcard .= "ADR;TYPE=WORK:" . $businessCard->address . "\n";
+        $vcard .= "END:VCARD\n";
+        return response($vcard)
+            ->header('Content-Type', 'text/vcard')
+            ->header('Content-Disposition', 'attachment; filename=business-card.vcf');
+    }
 } 

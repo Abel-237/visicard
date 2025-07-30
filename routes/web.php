@@ -168,6 +168,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/business-cards/{businessCard}/share/nfc', [App\Http\Controllers\CardShareController::class, 'shareViaNfc'])->name('business-cards.share.nfc');
     Route::post('/business-cards/{businessCard}/share/nfc-export', [App\Http\Controllers\CardShareController::class, 'exportNFC'])->name('business-cards.share.nfc-export');
     Route::get('/business-cards/{businessCard}/share/stats', [App\Http\Controllers\CardShareController::class, 'getSharingStats'])->name('business-cards.share.stats');
+    Route::get('/business-cards/{businessCard}/vcard', [App\Http\Controllers\BusinessCardController::class, 'vcard'])->name('business-cards.vcard');
 });
 
 // Routes publiques pour afficher les cartes partagées

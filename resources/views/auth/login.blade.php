@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 <div class="register-bg d-flex align-items-center min-vh-100 py-5">

@@ -10,18 +10,7 @@ class BusinessCard extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'name',
-        'position',
-        'company',
-        'industry',
-        'email',
-        'phone',
-        'website',
-        'address',
-        'bio',
-        'logo',
-        'social_media',
+        'user_id', 'name', 'title', 'phone', 'email', 'website', 'address', 'company', 'github', 'linkedin', 'logo_path', 'visibility', 'views'
     ];
 
     protected $casts = [

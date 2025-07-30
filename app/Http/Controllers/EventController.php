@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Suggestion;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 
 class EventController extends Controller
 {
@@ -91,12 +95,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        // Check if user is admin or editor
-        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'editor') {
-            return redirect()->route('events.index')
-                           ->with('error', 'Vous n\'avez pas la permission de créer un événement');
-        }
-        
+        // Suppression de la vérification de rôle : tout utilisateur peut créer
         $categories = Category::all();
         
         return view('events.create', compact('categories'));
@@ -110,11 +109,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        // Check if user is admin or editor
-        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'editor') {
-            return redirect()->route('events.index')
-                           ->with('error', 'Vous n\'avez pas la permission de créer un événement');
-        }
+        // Suppression de la vérification de rôle : tout utilisateur peut créer
         
         // Correction : convertir les tags string en array si besoin
         if ($request->filled('tags') && is_string($request->tags)) {
@@ -615,5 +610,49 @@ class EventController extends Controller
         
         // Download the PDF
         return $pdf->download($event->slug . '.pdf');
+    }
+
+    public function publicIndex()
+    {
+        $events = \App\Models\Event::with('user')
+            ->where('user_id', '!=', auth()->id()) // Exclut les événements de l'utilisateur connecté
+            ->orderByDesc('event_date')
+            ->paginate(12);
+
+        return view('events.public-index', compact('events'));
+    }
+
+    public function myEvents(Request $request)
+    {
+        $query = \App\Models\Event::where('user_id', auth()->id());
+
+        // Recherche par mot-clé (titre, description, lieu, etc.)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%")
+                  ->orWhere('location', 'like', "%$search%");
+            });
+        }
+
+        // Tri par date (du plus récent au plus ancien)
+        $events = $query->orderByDesc('event_date')->paginate(12);
+
+        // Tu peux aussi passer d'autres variables si besoin
+        return view('events.index', compact('events'));
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        Event::listen(Login::class, function ($event) {
+            \Cache::put('user-is-online-' . $event->user->id, true, now()->addMinutes(2));
+        });
+
+        Event::listen(Logout::class, function ($event) {
+            \Cache::forget('user-is-online-' . $event->user->id);
+        });
     }
 }

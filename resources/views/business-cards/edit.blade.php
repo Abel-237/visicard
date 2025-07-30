@@ -9,6 +9,19 @@
                     <h4 class="mb-0">Modifier ma carte de visite</h4>
                 </div>
                 <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge bg-info">Consultations : {{ $businessCard->views ?? 0 }}</span>
+                        </div>
+                        <div>
+                            @if(isset($qrCode))
+                                <div class="mb-2">{!! $qrCode !!}</div>
+                            @endif
+                            <a href="{{ route('business-cards.vcard', $businessCard) }}" class="btn btn-outline-success btn-sm" target="_blank">
+                                <i class="fas fa-id-card"></i> Télécharger vCard
+                            </a>
+                        </div>
+                    </div>
                     <form action="{{ route('business-cards.update', $businessCard) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -155,6 +168,15 @@
                             @enderror
                         </div>
 
+                        <!-- Visibilité -->
+                        <div class="mb-3">
+                            <label for="visibility" class="form-label">Visibilité</label>
+                            <select class="form-select" id="visibility" name="visibility">
+                                <option value="public" {{ old('visibility', $businessCard->visibility) == 'public' ? 'selected' : '' }}>Publique</option>
+                                <option value="private" {{ old('visibility', $businessCard->visibility) == 'private' ? 'selected' : '' }}>Privée</option>
+                            </select>
+                        </div>
+
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-2"></i>Enregistrer les modifications
@@ -193,6 +215,29 @@
             }
             reader.readAsDataURL(file);
         }
+    });
+
+    // Liens cliquables en modale (pas de redirection)
+    document.querySelectorAll('a[data-modal-link]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = 0;
+            modal.style.left = 0;
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.background = 'rgba(0,0,0,0.5)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.innerHTML = `<div style="background:#fff;padding:2rem;max-width:90vw;max-height:90vh;overflow:auto;position:relative;">
+                <button onclick="this.parentNode.parentNode.remove()" style="position:absolute;top:10px;right:10px;" class='btn btn-danger btn-sm'>Fermer</button>
+                <iframe src="${url}" style="width:80vw;height:70vh;border:none;"></iframe>
+            </div>`;
+            document.body.appendChild(modal);
+        });
     });
 </script>
 @endpush

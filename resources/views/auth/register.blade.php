@@ -1,8 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
-dans la vue show register je veux que tu me fasses un design professionne
-    <div class="container">
+
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8 col-12">
                 <div class="register-card shadow-lg border-0 rounded-4 bg-white p-4 p-md-5 mx-auto">

@@ -42,7 +42,7 @@ class MessageController extends Controller
         
         // Vérifier que l'utilisateur actuel a une carte de visite
         if (!$currentUser->businessCard) {
-            return redirect()->route('business-cards.create')
+            return redirect()->route('s.create')
                 ->with('error', 'Vous devez créer une carte de visite pour pouvoir discuter avec d\'autres utilisateurs.');
         }
         

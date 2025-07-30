@@ -26,6 +26,8 @@ class CreateBusinessCardsTable extends Migration
             $table->string('github')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('logo_path')->nullable();
+            $table->enum('visibility', ['public', 'private'])->default('private');
+            $table->unsignedBigInteger('views')->default(0);
             $table->timestamps();
         });
     }
