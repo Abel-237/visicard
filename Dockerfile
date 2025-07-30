@@ -68,9 +68,6 @@ EXPOSE 80
 RUN echo '#!/bin/bash\n\
 echo "🚀 Démarrage de l'\''application Laravel..."\n\
 \n\
-# Attendre un peu pour s'\''assurer que tout est prêt\n\
-sleep 5\n\
-\n\
 # Vérifier si la clé d'\''application est définie\n\
 if [ -z "$APP_KEY" ]; then\n\
     echo "⚠️  APP_KEY non définie, génération d'\''une nouvelle clé..."\n\
@@ -95,8 +92,8 @@ if [ ! -f "public/index.php" ]; then\n\
     exit 1\n\
 fi\n\
 \n\
-# Démarrer Apache en arrière-plan\n\
+# Démarrer Apache\n\
 echo "🌐 Démarrage d'\''Apache..."\n\
-apache2-foreground' > /start.sh && chmod +x /start.sh
+exec apache2-foreground' > /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"] 
