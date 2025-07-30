@@ -10,17 +10,17 @@
                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white relative overflow-hidden">
                     <div class="absolute inset-0 bg-black opacity-10"></div>
                     <div class="relative z-10">
-                        @if($businessCard->logo)
+        @if($businessCard->logo)
                             <div class="flex justify-center mb-6">
                                 <div class="bg-white p-3 rounded-full shadow-lg">
                                     <img src="{{ asset('storage/' . $businessCard->logo) }}" 
                                          alt="Logo" 
                                          class="h-16 w-16 object-cover rounded-full">
                                 </div>
-                            </div>
-                        @endif
-                        
-                        <div class="text-center">
+            </div>
+        @endif
+
+        <div class="text-center">
                             <h1 class="text-3xl font-bold mb-2">{{ $businessCard->name }}</h1>
                             <p class="text-xl opacity-90 mb-1">{{ $businessCard->position }}</p>
                             <p class="text-lg opacity-80">@ {{ $businessCard->company }}</p>
@@ -33,7 +33,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+        </div>
 
                 <!-- Contenu principal -->
                 <div class="p-8">
@@ -75,15 +75,15 @@
                                        class="text-gray-800 font-medium hover:text-green-600 transition-colors">
                                         {{ $businessCard->phone }}
                                     </a>
-                                </div>
+            </div>
                                 <button onclick="copyToClipboard('{{ $businessCard->phone }}')" 
                                         class="text-gray-400 hover:text-green-600 transition-colors">
                                     <i class="fas fa-copy"></i>
                                 </button>
-                            </div>
+            </div>
                             @endif
 
-                            @if($businessCard->website)
+            @if($businessCard->website)
                             <div class="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-purple-50 transition-colors">
                                 <div class="bg-purple-100 p-2 rounded-lg mr-4">
                                     <i class="fas fa-globe text-purple-600"></i>
@@ -97,10 +97,10 @@
                                     </a>
                                 </div>
                                 <i class="fas fa-external-link-alt text-gray-400"></i>
-                            </div>
-                            @endif
+            </div>
+            @endif
 
-                            @if($businessCard->address)
+            @if($businessCard->address)
                             <div class="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-orange-50 transition-colors">
                                 <div class="bg-orange-100 p-2 rounded-lg mr-4">
                                     <i class="fas fa-map-marker-alt text-orange-600"></i>
@@ -109,13 +109,13 @@
                                     <p class="text-sm text-gray-500">Adresse</p>
                                     <span class="text-gray-800 font-medium">{{ $businessCard->address }}</span>
                                 </div>
-                            </div>
-                            @endif
+            </div>
+            @endif
                         </div>
-                    </div>
+        </div>
 
                     <!-- Bio -->
-                    @if($businessCard->bio)
+        @if($businessCard->bio)
                     <div class="mb-8">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                             <i class="fas fa-quote-left text-blue-600 mr-2"></i>
@@ -126,8 +126,8 @@
                                 "{{ $businessCard->bio }}"
                             </p>
                         </div>
-                    </div>
-                    @endif
+        </div>
+        @endif
 
                     <!-- Réseaux sociaux -->
                     @if($businessCard->social_media && count($businessCard->social_media) > 0)
@@ -137,7 +137,7 @@
                             Réseaux sociaux
                         </h3>
                         <div class="flex flex-wrap gap-3">
-                            @foreach($businessCard->social_media as $platform => $url)
+            @foreach($businessCard->social_media as $platform => $url)
                                 <a href="{{ $url }}" 
                                    target="_blank" 
                                    class="flex items-center px-4 py-3 bg-gray-100 rounded-xl hover:bg-blue-100 transition-all duration-200 group">
@@ -151,19 +151,19 @@
                                     <span class="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
                                         {{ ucfirst($platform) }}
                                     </span>
-                                </a>
-                            @endforeach
+                </a>
+            @endforeach
                         </div>
-                    </div>
-                    @endif
+        </div>
+        @endif
 
                     <!-- Actions -->
                     <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
                         <a href="{{ $businessCard->getPublicShareUrl() }}" 
                            class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                             <i class="fas fa-share mr-2"></i>
-                            Partager ma carte
-                        </a>
+                Partager ma carte
+            </a>
                         
                         <button onclick="downloadCard()" 
                                 class="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 border border-gray-300">

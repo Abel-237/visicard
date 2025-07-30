@@ -39,13 +39,10 @@ RUN mkdir -p storage/framework/{sessions,views,cache} \
 RUN a2enmod rewrite
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Générer la clé d'application (sera remplacée par les variables d'environnement)
-RUN php artisan key:generate --no-interaction || true
-
-# Optimiser l'application pour la production
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+# Optimiser l'application pour la production (sans générer la clé ici)
+RUN php artisan config:cache || true \
+    && php artisan route:cache || true \
+    && php artisan view:cache || true
 
 # Exposer le port
 EXPOSE 80
