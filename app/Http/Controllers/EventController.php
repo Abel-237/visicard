@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Suggestion;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Event as EventFacade;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 
@@ -647,11 +647,11 @@ class EventController extends Controller
     {
         parent::boot();
 
-        Event::listen(Login::class, function ($event) {
+        EventFacade::listen(Login::class, function ($event) {
             \Cache::put('user-is-online-' . $event->user->id, true, now()->addMinutes(2));
         });
 
-        Event::listen(Logout::class, function ($event) {
+        EventFacade::listen(Logout::class, function ($event) {
             \Cache::forget('user-is-online-' . $event->user->id);
         });
     }
